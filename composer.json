@@ -1,0 +1,17 @@
+{
+  "name": "administrador/bienes-raices_proyecto-completo",
+  "description": "Creando Proyecto con POO",
+  "type": "project",
+  "authors": [
+    {
+      "name": "Arturo Valverde",
+      "email": "art.valverde.563@gmail.com"
+    }
+  ],
+  "require": {},
+  "autoload": {
+    "psr-4": {
+      "App\\": "./classes"
+    }
+  }
+}
