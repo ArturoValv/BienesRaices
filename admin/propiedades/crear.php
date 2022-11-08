@@ -1,6 +1,11 @@
 <?php
 //Base de Datos
-require '../../includes/config/database.php';
+require '../../includes/app.php';
+
+use App\Propiedad;
+
+estaAutenticado();
+
 $db = conectarDB();
 
 //Consultar para obtener los vendedores
@@ -22,7 +27,7 @@ $vendedorId = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
-   /*  echo "<pre>";
+    /*  echo "<pre>";
     var_dump($_POST);
     echo "</pre>";
 
