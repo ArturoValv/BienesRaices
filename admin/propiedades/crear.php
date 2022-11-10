@@ -26,16 +26,8 @@ $vendedorId = '';
 //Ejecutar el código después de que el usuario envía en formulario
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-
-    /*  echo "<pre>";
-    var_dump($_POST);
-    echo "</pre>";
-
-    echo "<pre>";
-    var_dump($_FILES);
-    echo "</pre>";
- */
-    /*exit; */
+    $propiedad = new Propiedad($_POST);
+    $propiedad->guardar();
 
     $titulo = mysqli_real_escape_string($db, $_POST['titulo']);
     $precio = mysqli_real_escape_string($db, $_POST['precio']);
@@ -43,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $habitaciones = mysqli_real_escape_string($db, $_POST['habitaciones']);
     $wc = mysqli_real_escape_string($db, $_POST['wc']);
     $estacionamiento = mysqli_real_escape_string($db, $_POST['estacionamiento']);
-    $vendedorId = mysqli_real_escape_string($db, $_POST['vendedor']);
+    $vendedorId = mysqli_real_escape_string($db, $_POST['vendedorId']);
     $creado = date('Y/m/d');
 
     //Asignar files hacia una variable
@@ -73,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errores[] = "Debes añadir un estacionamiento";
     }
 
-    if (!$vendedorId) {
+    if (!$vendedorId || !is_numeric($vendedorId)) {
         $errores[] = "Elige un vendedor";
     }
 
@@ -106,8 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         move_uploaded_file($imagen['tmp_name'], $carpetaImagenes . $nombreImagen);
 
         //Insertar en base de datos
-        $query = " INSERT INTO propiedades (titulo, precio, imagen, descripcion, habitaciones, wc, estacionamiento, creado, vendedorId) 
-    VALUES ('$titulo', '$precio', '$nombreImagen', '$descripcion', '$habitaciones', '$wc', '$estacionamiento', '$creado', '$vendedorId') ";
+
 
         $resultado = mysqli_query($db, $query);
 
@@ -172,8 +163,8 @@ incluirTemplate('header');
 
             <legend>Vendedor</legend>
 
-            <select name="vendedor" id="">
-                <option value=" " selected>--Seleccione--</option>
+            <select name="vendedorId" id="">
+                <option value="" selected>--Seleccione--</option>
                 <?php while ($vendedor = mysqli_fetch_assoc($resultado)) : ?>
                     <option <?php echo $vendedorId === $vendedor['id'] ? 'selected' : ' '; ?> value="<?php echo $vendedor['id']; ?>">
                         <?php echo $vendedor['nombre'] . " " . $vendedor['apellido']; ?>
