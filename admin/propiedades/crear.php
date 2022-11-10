@@ -13,7 +13,7 @@ $consulta = "SELECT * FROM VENDEDORES;";
 $resultado = mysqli_query($db, $consulta);
 
 //Arreglo con mensajes de errores
-$errores = [];
+$errores = Propiedad::getErrores();
 
 $titulo = '';
 $precio = '';
@@ -27,64 +27,29 @@ $vendedorId = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $propiedad = new Propiedad($_POST);
-    $propiedad->guardar();
+    $errores = $propiedad->validar();
 
-    $titulo = mysqli_real_escape_string($db, $_POST['titulo']);
+    //Sanitizar con funciones, cambia en POO
+    /* $titulo = mysqli_real_escape_string($db, $_POST['titulo']);
     $precio = mysqli_real_escape_string($db, $_POST['precio']);
     $descripcion = mysqli_real_escape_string($db, $_POST['descripcion']);
     $habitaciones = mysqli_real_escape_string($db, $_POST['habitaciones']);
     $wc = mysqli_real_escape_string($db, $_POST['wc']);
     $estacionamiento = mysqli_real_escape_string($db, $_POST['estacionamiento']);
     $vendedorId = mysqli_real_escape_string($db, $_POST['vendedorId']);
-    $creado = date('Y/m/d');
+    $creado = date('Y/m/d'); */
 
-    //Asignar files hacia una variable
-    $imagen = $_FILES['imagen'];
 
-    if (!$titulo) {
-        $errores[] = "Debes añadir un título";
-    }
-
-    if (!$precio) {
-        $errores[] = "Debes añadir un precio";
-    }
-
-    if (!$descripcion) {
-        $errores[] = "Debes añadir una descripción";
-    }
-
-    if (!$habitaciones) {
-        $errores[] = "Debes añadir una habitación";
-    }
-
-    if (!$wc) {
-        $errores[] = "Debes añadir un baño";
-    }
-
-    if (!$estacionamiento) {
-        $errores[] = "Debes añadir un estacionamiento";
-    }
-
-    if (!$vendedorId || !is_numeric($vendedorId)) {
-        $errores[] = "Elige un vendedor";
-    }
-
-    if (!$imagen['name'] || $imagen['error']) {
-        $errores[] = 'La imagen es obligatoria';
-    }
-
-    //Validar por tamaño
-
-    $medida = 1000 * 1000;
-
-    if ($imagen['size'] > $medida) {
-        $errores[] = 'La imagen es muy pesada.';
-    }
 
     //Insertar en la base de datos
     if (empty($errores)) {
-        //Subida de Archivos
 
+        $propiedad->guardar();
+
+        //Asignar files hacia una variable
+        $imagen = $_FILES['imagen'];
+
+        //Subida de Archivos
         //Crear carpeta
         $carpetaImagenes = '../../imagenes/';
 

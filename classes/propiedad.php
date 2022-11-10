@@ -11,6 +11,9 @@ class Propiedad
         'descripcion', 'habitaciones', 'wc', 'estacionamiento', 'creado', 'vendedorId'
     ];
 
+    //Errores
+    protected static $errores = [];
+
     public $id;
     public $titulo;
     public $precio;
@@ -84,5 +87,56 @@ class Propiedad
             $sanitizado[$key] = self::$db->escape_string($value);
         }
         return $sanitizado;
+    }
+
+    //Validacion
+    public static function getErrores()
+    {
+        return self::$errores;
+    }
+
+    public function validar()
+    {
+        if (!$this->titulo) {
+            self::$errores[] = "Debes añadir un título";
+        }
+
+        if (!$this->precio) {
+            self::$errores[] = "Debes añadir un precio";
+        }
+
+        if (!$this->descripcion) {
+            self::$errores[] = "Debes añadir una descripción";
+        }
+
+        if (!$this->habitaciones) {
+            self::$errores[] = "Debes añadir una habitación";
+        }
+
+        if (!$this->wc) {
+            self::$errores[] = "Debes añadir un baño";
+        }
+
+        if (!$this->estacionamiento) {
+            self::$errores[] = "Debes añadir un estacionamiento";
+        }
+
+        if (!$this->vendedorId || !is_numeric($this->vendedorId)) {
+            self::$errores[] = "Elige un vendedor";
+        }
+
+        /* if (!$this->imagen['name'] || $this->imagen['error']) {
+            self::$errores[] = 'La imagen es obligatoria';
+        } */
+
+        //Validar por tamaño
+
+        /* $medida = 1000 * 1000;
+
+        if ($this->imagen['size'] > $medida) {
+            self::$errores[] = 'La imagen es muy pesada.';
+        } */
+
+        return self::$errores;
     }
 }
