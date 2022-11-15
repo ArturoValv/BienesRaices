@@ -113,8 +113,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $nombreImagen = md5(uniqid(rand(), true)) . ".jpg";
             //Subir la Imagen
             move_uploaded_file($imagen['tmp_name'], $carpetaImagenes . $nombreImagen);
-        } else{
-             $nombreImagen = $propiedad['imagen'];
+        } else {
+            $nombreImagen = $propiedad['imagen'];
         }
 
 
