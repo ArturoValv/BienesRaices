@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     //Insertar en la base de datos
     if (empty($errores)) {
 
-        $resultado = $propiedad->guardar();
+        $propiedad->guardar();
 
         //Crear carpeta
         $carpetaImagenes = '../../imagenes/';
@@ -55,17 +55,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         //Guardar imagen en el server
         $image->save(CARPETAS_IMAGENES . $nombreImagen);
-
-        //Subir la Imagen con funciones
-        /* move_uploaded_file($imagen['tmp_name'], $carpetaImagenes . $nombreImagen); */
-
-        //Guardar en la BD
-
-        //Mensaje de éxito o error
-        if ($resultado) {
-            //Redireccionar al usuario
-            header('Location: /admin?resultado=1');
-        }
     }
 }
 
