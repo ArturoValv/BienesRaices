@@ -1,6 +1,7 @@
 <?php
 
 use App\Propiedad;
+use Intervention\Image\ImageManagerStatic as Image;
 
 require '../../includes/app.php';
 
@@ -31,46 +32,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $propiedad->sincronizar($args);
 
+    //Validacion
     $errores = $propiedad->validar();
+    //Generar un nombre único
+    $nombreImagen = md5(uniqid(rand(), true)) . ".jpg";
+
+    //Subida de archivos
+    if ($_FILES['propiedad']['tmp_name']['imagen']) {
+        $image = Image::make($_FILES['propiedad']['tmp_name']['imagen'])->fit(800, 600);
+        $propiedad->setImagen($nombreImagen);
+    }
 
     //Insertar en la base de datos
     if (empty($errores)) {
-
-        //Crear carpeta
-        $carpetaImagenes = '../../imagenes/';
-
-        if (!is_dir($carpetaImagenes)) {
-            mkdir($carpetaImagenes);
-        }
-
-        $nombreImagen = '';
-
-        //Subida de Archivos
-
-        if ($imagen['name']) {
-            //Eliminar imagen previa
-            unlink($carpetaImagenes . $propiedad['imagen']);
-
-            //Generar un nombre único
-            $nombreImagen = md5(uniqid(rand(), true)) . ".jpg";
-            //Subir la Imagen
-            move_uploaded_file($imagen['tmp_name'], $carpetaImagenes . $nombreImagen);
-        } else {
-            $nombreImagen = $propiedad['imagen'];
-        }
-
-
+        //Almacenar la imagen
+        $image->save(CARPETAS_IMAGENES . $nombreImagen);
         //Insertar en base de datos
-        $query = " UPDATE propiedades SET titulo = 
-        '${titulo}', precio = '${precio}', imagen = '${nombreImagen}', descripcion = '${descripcion}', habitaciones = ${habitaciones}, 
-        wc = ${wc}, estacionamiento = ${estacionamiento}, vendedorId = ${vendedorId} WHERE id = ${id}";
-
-        $resultado = mysqli_query($db, $query);
-
-        if ($resultado) {
-            //Redireccionar al usuario
-            header("Location: /admin?resultado=2");
-        }
+        $propiedad->guardar();
     }
 }
 
