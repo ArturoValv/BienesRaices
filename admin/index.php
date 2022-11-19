@@ -3,9 +3,12 @@ require '../includes/app.php';
 estaAutenticado();
 
 use App\Propiedad;
+use App\Vendedor;
 
 //Método para obtener las propiedades
 $propiedades = Propiedad::all();
+$vendedores = Vendedor::all();
+
 
 
 //Muesta mensaje condicional
