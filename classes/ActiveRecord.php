@@ -160,6 +160,16 @@ class ActiveRecord
         return $resultado;
     }
 
+    //Obtiene número de registros limitados
+    public static function get($cantidad)
+    {
+        $query = "SELECT * FROM " . static::$tabla . " LIMIT " . $cantidad;
+
+        $resultado = self::consultaSQL($query);
+
+        return $resultado;
+    }
+
     //Busca un registro por su id
     public static function find($id)
     {
